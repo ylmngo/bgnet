@@ -99,3 +99,70 @@ protocol - (TCP or UDP), can be set to 0
 
 socket() returns a socket descriptor that can be used later in system calls 
 
+int bind(int sockfd, struct sockaddr *my_addr, int addrlen); 
+
+parameters: 
+sockfd - socket file descriptor returned by socket() 
+my_addr - pointer to a struct that contains socket address information (port, address, IP family)
+addrlen - lenght in bytes of address 
+
+bind associates a socket descriptor with a port on a local machine 
+incoming packets to a certain port are matched with the socket descriptor of a certain process
+
+int connect(int sockfd, struct sockaddr *server_addr, int addrlen); 
+
+parameters: 
+sockfd - socket file descriptor 
+server_addr - pointer to a struct that contains the socket address information 
+addrlen - length of address in bytes 
+
+int listen(int sockfd, int backlog); 
+
+parameters: 
+sockfd - socket file descriptor 
+backlog - number of connections allowed 
+
+listen() will listen for incomming connections and wait until you accept() 
+backlog are the number of incoming connections that can be queued up at once 
+
+int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen); 
+
+parameters: 
+sockfd - local socket file descriptor, the one we use for listen() 
+addr - pointer to local sockaddr_storage 
+addrlen - length of address in bytes 
+
+accept() returns a socket file descriptor associated with the new connection between our
+port and the incoming connection 
+
+int send(int sockfd, const void* msg, int len, int flags); 
+
+parameters: 
+sockfd - socket file descriptor you want to send messages to, one returned by acccept() 
+msg - pointer to data you want to send 
+len - length of data you want to send 
+flags  - set flag to 0 
+
+send() returns the number of bytes sent 
+ 
+int recv(int sockfd, void* buf, int len, int flags); 
+sockfd - socket file descriptor to read from (one from accept())  
+buf - buffer to read info into 
+len - length of buf 
+flags - set flags to 0 
+
+recv returns the number of bytes read into buffer 
+
+close(sockfd); 
+closes the socket file connection 
+
+int shutdown(int sockfd, int how); 
+offers more control over the how connection was closed 
+
+int getpeername(int sockfd, struct sockaddr *addr, int *addrlen); 
+tells you who is at the other end of the connection 
+addr holds the info about the other end of the connection 
+getnameinfo or inet_ntop can be used to get info about the other end through passing in addr 
+
+int gethostname(char* hostname, size_t size); 
+returns the name of the computer that your program is running on  
