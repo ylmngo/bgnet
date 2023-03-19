@@ -1,0 +1,101 @@
+Chapter -2 
+
+File Descriptors:  
+When any Unix programs do any sort of IO, they do so through the use of file descriptors
+File descriptors are integers that are present for any open file. 
+This file can be anything, network connection, FIFO, a pipe , a terminal. 
+In C/C++, File Descriptors are implemented through the use of FILE pointers 
+
+Sockets: 
+Sockets are reliable two-way connection between streams. 
+There are many types of Sockets: Internet Sockets, Unix Sockets, X.25 Sockets 
+There are mainly two types of Internet Sockets: Stream Sockets(SOCK_STREAM), Datagram Sockets(SOCK_DGRAM). 
+Datagram Sockets are also called connectionless sockets. 
+HTTP Protocol uses Stream Sockets to get pages. 
+Stream Sockets use TCP Protocol 
+Datagram Sockets use UDP Protocol
+
+Data Communication Protocols 
+TCP and UDP for Data Transmission, IP for Intenret Routing 
+UDP does not require a connection, as such it is used in tasks which do not require precise Data 
+Eg: Multiplayer games, streaming, audio, video conferencing. 
+UDP is way faster than TCP at the cost of reliability 
+The TCP/IP Stack: 
+    Application Layer (telnet/ftp) 
+    Transport Layer   (TCP, UDP) 
+    Internet Layer    (IP and routing) 
+    Physical Layer    (Ethernet, Wifi) 
+
+Chapter -3 
+ 
+Structs 
+struct addrinfo {
+    int      ai_flags; //AI_PASSIVE, AI_CANNONNAME 
+    int      ai_family; //AF_INET (integer value of 2), AF_INET6 (integer value of 10)
+    int      ai_socktype; //SOCK_STREAM, SOCK_DGRAM 
+    int      ai_protocol; //use 0 for any 
+    size_t   ai_addrlen; // size of ai_addr in bytes 
+    sockaddr *ai_addr; //struct sockaddr_in 
+    char     *ai_cannonname; //full canonical hostname 
+
+    addrinfo *ai_next; //pointer to next node 
+}; 
+
+getaddrinfo() returns a pointer to the first node of a linked list of above structures 
+
+struct sockaddr {
+    unsigned short sa_family; //address family 
+    char           sa_data[14]; //14 bytes of protocol address  
+};
+
+struct sockaddr_in {
+    short int          sin_family; //Address Family 
+    unsigned short int sin_port; //Port Number 
+    in_addr            sin_addr; //Internet Address 
+    unsigned char      sin_zero[8]; //Same size as struct sockaddr   
+};
+
+sockaddr_in can be cast to sockadrr
+sin_zero is added to pad the length of the struct to be the same as sock_addr 
+
+struct in_addr {
+    uint32_t s_addr; // 32 bit integer 
+}; 
+
+s_addr references the 4 Byte IP Address 
+
+Chapter -5 
+
+int getaddrinfo(const char* node
+                const char* service, 
+                const struct addrinfo *hints,
+                struct addrinfo **res) 
+        
+parameters: 
+node - hostname or an IP address to which we have to connect 
+service - port number or a particular service like http or ftp 
+hints - pointer to a struct addrinfo that we have already filled out.
+res - pointer to a linked in which our result gets stored in 
+
+getaddrinfo returns an integer value indicating the success or failure. 
+it preps the socket address structure (sockaddr_in or ai_addr in addrinfo)   
+
+const char* inet_ntop(int af, const void *src, char *dst, socklen_t size); 
+
+parameters: 
+af - address family (AF_INET or AF_INET6) 
+src - socket address family 
+dst - resultant string in which the IP address is stored 
+size - size of IP string 
+
+inet_ntop converts the IP address in bytes (network byte order) to character string 
+
+int socket(int domain, int type, int protocol); 
+
+parameters: 
+domain - IPv4 or IPv6 (here, PF_INET or PF_INET6) PF - protocol family 
+type - socket type (SOCK_STREAM or SOCK_DGRAM) 
+protocol - (TCP or UDP), can be set to 0 
+
+socket() returns a socket descriptor that can be used later in system calls 
+
